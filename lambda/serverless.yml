@@ -1,17 +1,27 @@
-
 service: selenium-lambda
 
 
 provider:
   name: aws
   runtime: python3.6
-  region: ap-southeast-2
+  region: us-west-1
   timeout: 900
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource: arn:aws:s3:::selenium-screenshot/*
 
 
 functions:
   hello:
     handler: handler.hello
     layers:
-      - ${cf:selenium-layer-dev.SeleniumLayerExport}
-      - ${cf:selenium-layer-dev.ChromedriverLayerExport}
+      - arn:aws:lambda:us-west-1:679587238355:layer:selenium:1
+      - arn:aws:lambda:us-west-1:679587238355:layer:chromedriver:1
+    events:
+      - s3:
+        bucket: selenium-screenshot
+        event: s3:ObjectCreated:*
+        existing: true
+

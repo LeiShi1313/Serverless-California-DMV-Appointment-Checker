@@ -1,6 +1,6 @@
-# Selenium UI testing with AWS Lambda Layers
+# California DMV behind-the-wheel auto appointment check using Selenium and AWS Lambda
 
-This is an example of set up Selenium testing with AWS lambda layers Python3.6
+This is a test project used for checking latest california behind-the-wheel test appointment date, it is **not working** because the DMV website now using [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
 
 ### File Structure
 
@@ -31,42 +31,49 @@ This is an example of set up Selenium testing with AWS lambda layers Python3.6
 
 ### Install
 Go to root directory of project
-```buildoutcfg
+
+```shell
 # download Selenium 2.37
-$ pip3.6 install -t seleniumLayer/selenium/python/lib/python3.6/site-packages selenium=2.37
+pip install -t seleniumLayer/selenium/python/lib/python3.6/site-packages selenium==2.37
+pip install -t seleniumLayer/selenium/python/lib/python3.6/site-packages boto==2.49
 
 # download chrome driver
-$ cd seleniumLayer
-$ mkdir chromedriver
-$ cd chromedriver
-$ curl -SL https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip > chromedriver.zip
-$ unzip chromedriver.zip
-$ rm chromedriver.zip
+cd seleniumLayer
+mkdir chromedriver
+cd chromedriver
+curl -SL https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip > chromedriver.zip
+unzip chromedriver.zip
+rm chromedriver.zip
 
 # download chrome binary
-$ curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-41/stable-headless-chromium-amazonlinux-2017-03.zip > headless-chromium.zip
-$ unzip headless-chromium.zip
-$ rm headless-chromium.zip
-
+curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-41/stable-headless-chromium-amazonlinux-2017-03.zip > headless-chromium.zip
+unzip headless-chromium.zip
+rm headless-chromium.zip
 ```
 
 ### Deploy Lambda Layers
 Go to root directory of project
-```buildoutcfg
-$ cd seleniumLayer
-$ sls deploy 
+```shell
+cd seleniumLayer
+sls deploy 
+```
+
+### S3 Set Up
+Change the S3 bucket name in `lambda/serverless.yml`:
+```yml
+Resource: arn:aws:s3:::selenium-screenshot/*
 ```
 
 ### Deploy Lambda Function
 Go to root directory of project
-```buildoutcfg
-$ cd lambda
-$ sls deploy 
+```shell
+cd lambda
+sls deploy 
 ```
 
 ### Start Testing 
 Go to root directory of project
-```buildoutcfg
-$ cd lambda
-$ sls invoke --function hello
+```shell
+cd lambda
+sls invoke --function hello
 ```
